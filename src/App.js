@@ -6,6 +6,7 @@ import ToDoServices from './Services/ToDoServices';
 import {SetAllToList} from './Redux/ToDo/ToDoActions';
 import { useDispatch } from 'react-redux';
 import { SetAllSubToDos } from './Redux/SubToDo/SubToDoActions';
+import CreateList from './Components/CreateList';
 
 function App() {
   const dispatch = useDispatch();
@@ -19,8 +20,6 @@ function App() {
     if(todores.data.data && subres.data.data){
      dispatch(SetAllToList(todores.data.data));
      dispatch(SetAllSubToDos(subres.data.data));
-      console.log(todores.data.data);
-      console.log(subres.data.data);
     }
   }
   
@@ -28,7 +27,8 @@ function App() {
     <div className="App">
      <div className="main-container">
      <h1 className="main-head">To Do Application</h1>
-     <Accordions/>
+      <CreateList/>
+     <Accordions getData={getData}/>
      </div>
     </div>
   );

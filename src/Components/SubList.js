@@ -4,20 +4,28 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import CreateSubTask from './CreateSubTask';
+import SubToDoServices from '../Services/SubToDoServices';
+import { SetSubToDoStatus } from '../Redux/SubToDo/SubToDoActions';
+import { useDispatch } from 'react-redux';
 
-export default function SubList({subtodos, id}) {
-    useEffect(() => {
-        getFilteredSubToDos()
-    }, [])
+export default function SubList({id, subtodos}) {
+  const dispatch = useDispatch();
   const [filteredSubToDos, setFilteredSubToDos] = useState([]);
+    useEffect(() => {
+        getFilteredSubToDos();
+    }, [subtodos])
 
   const getFilteredSubToDos = () => {
     const res = subtodos.filter((item) => item.todo_id === id);
     setFilteredSubToDos([...res]);
   }
 
-  const handleToggle = (value) => () => {
-    console.log(value);
+  const handleToggle = (value) => async() => {
+    const res = await SubToDoServices.updateSubToDo({status: !value.status}, value._id);
+    if(res.data){
+      dispatch(SetSubToDoStatus(res.data.updatedSubToDo));
+    }
   };
 
   return (
@@ -43,6 +51,7 @@ export default function SubList({subtodos, id}) {
           </ListItem>
         );
       })}
+      <CreateSubTask parentID = {id}/>
     </List>
   );
 }

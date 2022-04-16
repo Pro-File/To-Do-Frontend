@@ -1,4 +1,4 @@
-import { SET_ALL_SUBTODO_TO_LIST, ADD_SUBTODO_TO_LIST, ELIMINATE_SUBTODO_FROM_LIST } from "./SubToDoConstants";
+import { SET_ALL_SUBTODO_TO_LIST, ADD_SUBTODO_TO_LIST, ELIMINATE_SUBTODO_FROM_LIST, UPDATE_SUBTODO_STATUS } from "./SubToDoConstants";
 
 
 // Set All Todos
@@ -13,11 +13,20 @@ export var SetAllSubToDos = (data) => async(dispatch) => {
 
 // Adding ToDo
 export var SetSubToDoToList = (data) => async(dispatch) => {
-    console.log(data);
     dispatch({
         type: ADD_SUBTODO_TO_LIST,
         payload: {
             data
+        }
+    })
+}
+
+// Update Status
+export var SetSubToDoStatus = (subtodo) => async(dispatch) => {
+    dispatch({
+        type: UPDATE_SUBTODO_STATUS,
+        payload: {
+            subtodo
         }
     })
 }

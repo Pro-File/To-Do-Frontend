@@ -1,13 +1,17 @@
-import * as React from 'react';
+import React,{useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SubList from './SubList';
 import { Checkbox } from '@mui/material';
+import { UpdateStatusOfList } from '../Redux/ToDo/ToDoActions';
+import ToDoServices from '../Services/ToDoServices';
+import SubToDoServices from '../Services/SubToDoServices';
+import { SetSubToDoStatus } from '../Redux/SubToDo/SubToDoActions';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -45,13 +49,35 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function Accordions() {
+export default function Accordions({getData}) {
   const [expanded, setExpanded] = React.useState('panel1');
   const todos = useSelector((state) => state.toDos);
   const subtodos = useSelector((state) => state.subToDos);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("Reload!")
+  }, [todos, subtodos])
+  
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
+  };
+
+
+  
+  const handleToggle = (value) => async() => {
+    const res = await ToDoServices.updateToDo({status: !value.status}, value._id);
+    if(res.data){
+      const filteredChildren = subtodos.filter((item) => item.todo_id === value._id);
+      for(var child of filteredChildren){
+        const result = await SubToDoServices.updateSubToDo({status: res.data.updatedToDo.status}, child._id);
+        if(result.data){
+          dispatch(SetSubToDoStatus(result.data.updatedSubToDo));
+        }
+      }
+      dispatch(UpdateStatusOfList(res.data.updatedToDo));
+    }
   };
 
   return (
@@ -65,7 +91,7 @@ export default function Accordions() {
           <Typography>{item.title}</Typography>
           <Checkbox
                 edge="end"
-                // onChange={handleToggle(item)}
+                onChange={handleToggle(item)}
                 checked={item.status}
                 inputProps={{ 'aria-labelledby': labelId }}
               />
@@ -73,7 +99,7 @@ export default function Accordions() {
 
          </AccordionSummary>
          <AccordionDetails >
-          <SubList subtodos={subtodos} id={item._id}/>
+          <SubList id={item._id} subtodos={subtodos}/>
          </AccordionDetails>
        </Accordion>
        })
