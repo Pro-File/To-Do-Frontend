@@ -1,5 +1,16 @@
 .App {
   text-align: center;
+  overflow-y: auto;
+  background-color: aquamarine;
+  height: 100vh;
+}
+.main-container {
+  width: 50%;
+  margin: 0px auto;
+}
+
+.main-head{
+  margin: 40px 0px;
 }
 
 .App-logo {
