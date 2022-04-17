@@ -12,6 +12,22 @@
 .main-head{
   margin: 40px 0px;
 }
+.row-text{
+  display: flex;
+  justify-content: flex-start;
+}
+.row-sidearea{
+  display: flex;
+  justify-content: flex-end;
+}
+.text{
+  padding: 0px 20px;
+}
+.main-row{
+  width: 100%;
+  display:flex;
+  align-items: center;
+}
 
 .App-logo {
   height: 40vmin;
